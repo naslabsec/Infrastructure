@@ -41,10 +41,10 @@ Restart Suricata after modifying rules or config:
 screen -r surica and ctrl-c to close the process
 ```
 
-### rule writing
-example
+### Rules Writing
+
 ```suricata
-alert tcp $HOME_NET 1337 -> $EXTERNAL_NET 1337 (msg: "Path Traversal-../"; content: "../"; metadata: tag path_traversal; sid:1; rev: 1;)
+alert tcp $HOME_NET 1337 -> $EXTERNAL_NET any (msg: "Path Traversal-../"; content: "../"; metadata: tag path_traversal; sid:1; rev: 1;)
 ```
 
 rules content match:
