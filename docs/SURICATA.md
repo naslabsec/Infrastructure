@@ -10,8 +10,6 @@ With the following steps you can install Suricata and get the right config to st
 1. in File: `/etc/suricata/suricata.yaml` go to line 1862 and substitute `- suricata.rules` with `- /ctf/ipsrules/local.rules`
 
 2. Create rules file `/ctf/ipsrules/local.rules` add at least one rule [How to write rules](https://docs.suricata.io/en/suricata-6.0.0/rules/intro.html)
-
-	#example: 
 	```
 	alert tcp $HOME_NET 1984 -> $EXTERNAL_NET any (msg: "Path Traversal-../"; content: "../"; metadata: tag path_traversal; sid:1; rev: 1;)
 	alert tcp any any -> any any (msg: "Path Global-../"; flow:to_server; content: "../"; metadata: tag path_traversal; sid:2; rev: 2;)
@@ -25,21 +23,29 @@ With the following steps you can install Suricata and get the right config to st
 	sudo iptables -I OUTPUT -d "$ip" -p tcp --sport "$dp" -j NFQUEUE --queue-num 1 --queue-bypass
 	```
 	
-1. Start Suricata in [IPS mode](https://suricata.readthedocs.io/en/suricata-6.0.0/setting-up-ipsinline-for-linux.html) using screen
-	`sudo screen -dmS surica suricata -c /etc/suricata/suricata.yaml -q 0`	
+4. Start Suricata in [IPS mode](https://suricata.readthedocs.io/en/suricata-6.0.0/setting-up-ipsinline-for-linux.html) using screen
+	```bash
+	sudo screen -dmS surica suricata -c /etc/suricata/suricata.yaml -q 0
+	```	
 
 ## Usage
-### start and restart
+### Start & Restart
 
 Start Suricata in [IPS mode](https://suricata.readthedocs.io/en/suricata-6.0.0/setting-up-ipsinline-for-linux.html) using screen:
-`sudo screen -dmS surica suricata -c /etc/suricata/suricata.yaml -q 0`	
-
+```bash
+sudo screen -dmS surica suricata -c /etc/suricata/suricata.yaml -q 0
+```
+	
 Restart Suricata after modifying rules or config:
-`screen -r surica` and ctrl-c to close the process
+```bash
+screen -r surica and ctrl-c to close the process
+```
 
 ### rule writing
 example
-`alert tcp $HOME_NET 1337 -> $EXTERNAL_NET 1337 (msg: "Path Traversal-../"; content: "../"; metadata: tag path_traversal; sid:1; rev: 1;)`
+```suricata
+alert tcp $HOME_NET 1337 -> $EXTERNAL_NET 1337 (msg: "Path Traversal-../"; content: "../"; metadata: tag path_traversal; sid:1; rev: 1;)
+```
 
 rules content match:
 - ascii characters "abcd1234../"
