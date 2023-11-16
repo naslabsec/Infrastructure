@@ -7,7 +7,7 @@ Suricata is a high performance, open source network analysis and threat detectio
 ## Configurations
 With the following steps you can install Suricata and get the right config to start using it quick-start.
 
-1. in File: `/etc/suricata/suricata.yaml` go to line 1862 and substitute `- suricata.rules` with `- /ctf/ipsrules/local.rules`
+1. In `/etc/suricata/suricata.yaml` go to line 1862 and substitute `- suricata.rules` with `- /ctf/ipsrules/local.rules`
 
 2. Create rules file `/ctf/ipsrules/local.rules` add at least one rule [How to write rules](https://docs.suricata.io/en/suricata-6.0.0/rules/intro.html)
 	```
@@ -15,18 +15,13 @@ With the following steps you can install Suricata and get the right config to st
 	alert tcp any any -> any any (msg: "Path Global-../"; flow:to_server; content: "../"; metadata: tag path_traversal; sid:2; rev: 2;)
 	```
 
-3. **IMPORTANT!** Set-up **iptables rules** that sends pkts to NFQUEUE. Write the rules exactly like this with right IP and Port (add both input and output rules):
+3.  **!IMPORTANT!** Setup **iptables rules** that sends `pkts` to `NFQUEUE`. Write the rules **exactly** like this with right IP and port (add both input and output rules):
 	```bash
 	ip = "localhost"
 	dp = "1337"
 	sudo iptables -I INPUT -d "$ip" -p tcp --dport "$dp" -j NFQUEUE --queue-num 1 --queue-bypass
 	sudo iptables -I OUTPUT -d "$ip" -p tcp --sport "$dp" -j NFQUEUE --queue-num 1 --queue-bypass
 	```
-	
-4. Start Suricata in [IPS mode](https://suricata.readthedocs.io/en/suricata-6.0.0/setting-up-ipsinline-for-linux.html) using screen
-	```bash
-	sudo screen -dmS surica suricata -c /etc/suricata/suricata.yaml -q 0
-	```	
 
 ## Usage
 ### Start & Restart
@@ -38,7 +33,7 @@ sudo screen -dmS surica suricata -c /etc/suricata/suricata.yaml -q 0
 	
 Restart Suricata after modifying rules or config:
 ```bash
-screen -r surica and ctrl-c to close the process
+screen -r surica and Ctrl-C to close the process
 ```
 
 ### Rules Writing
