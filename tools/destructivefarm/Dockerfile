@@ -14,5 +14,8 @@ RUN pip3 install -r server/requirements.txt
 #: Overwrite server/config.py with our own
 COPY config.py server/config.py
 
+#: Add our protocols
+COPY protocols/ server/protocols/
+
 #: Run the server with server/start_server.sh
 CMD ["sh", "server/start_server.sh"]
