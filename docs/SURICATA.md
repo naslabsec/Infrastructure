@@ -15,7 +15,7 @@ With the following steps you can install Suricata and get the right config to st
 	alert tcp any any -> any any (msg: "Path Global-../"; flow:to_server; content: "../"; metadata: tag path_traversal; sid:2; rev: 2;)
 	```
 
-3. !IMPORTANT! Set-up **iptables rules** that sends pkts to NFQUEUE. Write the rules exactly like this with right IP and Port (add both input and output rules):
+3. **IMPORTANT!** Set-up **iptables rules** that sends pkts to NFQUEUE. Write the rules exactly like this with right IP and Port (add both input and output rules):
 	```bash
 	ip = "localhost"
 	dp = "1337"
