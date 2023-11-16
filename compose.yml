@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  ansible_control_node:
+    build:
+      context: .
+      args:
+        - MACHINE_IP=${MACHINE_IP}
+        - MACHINE_PASSWORD=${MACHINE_PASSWORD}
