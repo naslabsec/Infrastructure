@@ -6,6 +6,5 @@
     - name: ssh-port
       set_fact:
         ansible_port: "{{ sshport }}"
-        ansible_password: "{{ sshpassword }}"
     - ansible.builtin.import_role:
         name: init-vulnbox-users
