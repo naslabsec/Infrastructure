@@ -1,0 +1,14 @@
+---
+# tasks file for init-vulnbox-users
+- name: Change user password
+  user:
+    name: "{{ username }}"
+    update_password: always
+    password: "{{ newpassword | password_hash('sha512') }}"
+
+- name: Set up multiple authorized keys
+  ansible.posix.authorized_key:
+    user: "{{ username }}"
+    state: present
+    key: "{{ item }}"
+  loop: "{{ ssh_authorized_keys }}"
