@@ -1,7 +1,6 @@
 ---
 # tasks file for configure-suricata
 - name: install-suricata
-    update_password: always
   package:
     name: suricata
     state: latest

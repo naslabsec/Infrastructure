@@ -6,10 +6,13 @@
     - name: ssh-port
       set_fact:
         ansible_port: "{{ sshport }}"
-    - ansible.builtin.import_role:
+    - name: init-users
+      import_role:
         name: init-vulnbox-users
-    - ansible.builtin.import_role:
+    - name: enumerate-vulnbox
+      import_role:
         name: vulnbox-enumeration
-    - ansible.builtin.import_role:
+    - name: configure-suricata
+      import_role:
         name: configure-suricata
-        when: "{{ suricata|default(false)|bool == true }}"
+      when: "{{ suricata|default(false)|bool == true }}"
