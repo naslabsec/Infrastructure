@@ -1,2 +1,13 @@
 ---
 # tasks file for configure-suricata
+- name: install-suricata
+    update_password: always
+  package:
+    name: suricata
+    state: latest
+
+- name: Set up multiple authorized keys
+  service:
+    name: suricata
+    state: started
+    enabled: yes

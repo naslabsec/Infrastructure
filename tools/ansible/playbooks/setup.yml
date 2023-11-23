@@ -8,3 +8,8 @@
         ansible_port: "{{ sshport }}"
     - ansible.builtin.import_role:
         name: init-vulnbox-users
+    - ansible.builtin.import_role:
+        name: vulnbox-enumeration
+    - ansible.builtin.import_role:
+        name: configure-suricata
+        when: {{ suricata|default(false)|bool == true }}
