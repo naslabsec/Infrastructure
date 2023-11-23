@@ -12,4 +12,4 @@
         name: vulnbox-enumeration
     - ansible.builtin.import_role:
         name: configure-suricata
-        when: {{ suricata|default(false)|bool == true }}
+        when: "{{ suricata|default(false)|bool == true }}"
