@@ -2,6 +2,7 @@
 - hosts: vulnbox
   gather_facts: no
   remote_user: root
+  become: true
   tasks:
     - name: ssh-port
       set_fact:
@@ -9,10 +10,35 @@
     - name: init-users
       import_role:
         name: init-vulnbox-users
+    - name: check connection to google
+      uri:
+        url: "https://google.com"
+      register: has_internet
+      ignore_errors: true
+    - name: Print Connection Status
+      debug:
+        msg: "{{ has_internet.status }}" # -1 means no internet connection or URL broken, it should return 200
+    - name: install-utils
+      package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - nano
+        - net-tools
+        - git
+        - screen
+        - tcpdump
+        - sshfs
+        - socat
+        - netcat-traditional
+      ignore_errors: true
     - name: enumerate-vulnbox
       import_role:
         name: vulnbox-enumeration
     - name: configure-suricata
       import_role:
         name: configure-suricata
-      when: "{{ suricata|default(false)|bool == true }}"
+      when: ("suricata|default(false)|bool == true") # and (vulbox_has_internet|default(false)|bool == true) # to avoid installation without internet connection
+    - name: install-capture
+      import_role:
+        name: install-capture

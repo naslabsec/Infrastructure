@@ -5,7 +5,29 @@
     name: suricata
     state: latest
 
-- name: Set up multiple authorized keys
+- name: create rules file
+  ansible.builtin.file:
+    path: /ctf/ipsrules/local.rules
+    state: touch
+    owner: root
+    group: root
+    mode: '0770'
+
+- name: replace-path of rules
+  ansible.builtin.replace:
+    path: /etc/suricata/suricata.yaml
+    regexp: 'suricata\.rules'
+    replace: '/ctf/ipsrules/local.rules'
+
+- name: redirect-ports-to-nfqueue
+  shell: |
+    iptables -A INPUT -p tcp --dport "{{ item.port }}" -j NFQUEUE --queue-num 1 --queue-bypass
+    iptables -A OUTPUT -p tcp -s "{{ ansible_ssh_host }}" --sport "{{ item.port }}" -j NFQUEUE --queue-num 1 --queue-bypass
+  register: redirects
+  loop: "{{ (ansible_facts.tcp_listen + ansible_facts.udp_listen) | rejectattr('address', 'equalto', '::') | list}}"
+    
+
+- name: Start Suricata
   service:
     name: suricata
     state: started

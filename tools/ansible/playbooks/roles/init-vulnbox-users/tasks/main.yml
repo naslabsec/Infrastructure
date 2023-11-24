@@ -12,3 +12,13 @@
     state: present
     key: "{{ item }}"
   loop: "{{ ssh_authorized_keys }}"
+  when: ssh_authorized_keys is defined
+
+- name: create directories
+  ansible.builtin.file:
+    path: /ctf/ipsrules
+    state: directory
+    owner: root
+    group: root
+    mode: 0770
+    recurse: yes

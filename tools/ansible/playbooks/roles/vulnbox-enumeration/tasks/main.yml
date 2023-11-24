@@ -5,4 +5,15 @@
 
 - name: List all ports
   ansible.builtin.debug:
-    msg: "{{ (ansible_facts.tcp_listen + ansible_facts.udp_listen) | map(attribute='port') | unique | sort | list }}"
+    msg: "{{ ':'.join((item.port|string, item.name)) }}"
+  vars:
+    ports: "{{ (ansible_facts.tcp_listen + ansible_facts.udp_listen) | rejectattr('address', 'equalto', '::') | list}}"
+  loop: "{{ ports }}"
+
+- name: List all users
+  getent:
+    database: passwd
+    split: ':'
+
+- debug:
+    msg: "{{ getent_passwd | dict2items | map(attribute='key') | list }}"

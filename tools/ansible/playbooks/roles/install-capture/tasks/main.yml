@@ -1,2 +1,18 @@
 ---
 # tasks file for install-capture
+
+- name: Extract items and turn into a list
+  set_fact:
+      my_list: "{{ (ansible_facts.tcp_listen + ansible_facts.udp_listen) | rejectattr('address', 'equalto', '::') | map(attribute='port') }}"
+
+- name: Construct String
+  set_fact:
+    tcpdumpfilters: "{{ tcpdumpfilters|default('') + item|string + ' or port ' }}"
+  with_items:
+    - "{{ my_list }}"
+
+- debug:
+    msg: "{{ \"screen -dmS pcapOverIP socat TCP-LISTEN:57012,reuseaddr,fork EXEC:'tcpdump -U -Z root -w - port \" + tcpdumpfilters + \"22'\" }}"
+
+- name: Run PCAP over IP
+  command: "{{ \"screen -dmS pcapOverIP socat TCP-LISTEN:57012,reuseaddr,fork EXEC:'tcpdump -U -Z root -w - port \" + tcpdumpfilters + \"22'\" }}"
